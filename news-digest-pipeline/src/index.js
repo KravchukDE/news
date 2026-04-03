@@ -11,7 +11,16 @@ const app = express();
 
 // Middleware
 app.use(express.json({ limit: '5mb' }));
+app.use(express.text({ type: '*/*', limit: '5mb' }));
 app.use(morgan('dev'));
+
+// Debug: log all incoming requests
+app.use((req, res, next) => {
+  if (req.path !== '/health') {
+    console.log(`[debug] ${req.method} ${req.path} Content-Type: ${req.headers['content-type']} Body:`, typeof req.body === 'string' ? req.body.slice(0, 200) : JSON.stringify(req.body)?.slice(0, 200));
+  }
+  next();
+});
 
 // Routes
 app.use('/health', healthRouter);
