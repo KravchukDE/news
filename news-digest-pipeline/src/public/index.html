@@ -4,125 +4,417 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News Digest Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f7fa;
-      color: #333;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e5e5e5;
       padding: 24px;
+      min-height: 100vh;
     }
-    .container { max-width: 1000px; margin: 0 auto; }
-    h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
-    .subtitle { color: #888; font-size: 13px; margin-bottom: 24px; }
+
+    .container { max-width: 1060px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #e5e5e5 0%, #a3a3a3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .version-badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: #555;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      padding: 3px 10px;
+      letter-spacing: 0.3px;
+      flex-shrink: 0;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Course banner */
+    .course-banner {
+      background: linear-gradient(135deg, rgba(124,58,237,0.08) 0%, rgba(59,130,246,0.08) 100%);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 12px;
+      color: #888;
+      line-height: 1.6;
+    }
+    .course-banner strong { color: #a78bfa; font-weight: 600; }
+    .course-banner a {
+      color: #7c3aed;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .course-banner a:hover { color: #a78bfa; }
+
+    /* Table as card list */
     table {
       width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border-collapse: separate;
+      border-spacing: 0 6px;
     }
-    th {
-      background: #f0f2f5;
+    thead th {
       text-align: left;
-      padding: 10px 14px;
-      font-size: 11px;
+      padding: 8px 16px;
+      font-size: 10px;
       font-weight: 600;
       text-transform: uppercase;
-      color: #666;
-      letter-spacing: 0.5px;
+      color: #555;
+      letter-spacing: 0.8px;
+      border: none;
+      background: transparent;
+    }
+    tbody tr {
+      background: #1a1a1a;
+      transition: all 0.2s ease;
+      border-radius: 10px;
+    }
+    tbody tr:hover {
+      background: #1f1f1f;
+      box-shadow: 0 0 0 1px rgba(124,58,237,0.2), 0 4px 20px rgba(124,58,237,0.06);
     }
     td {
-      padding: 10px 14px;
-      border-top: 1px solid #eee;
+      padding: 12px 16px;
+      border: none;
       font-size: 13px;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      vertical-align: middle;
     }
-    tr:hover td { background: #fafbfc; }
-    .date-main { font-weight: 500; }
-    .date-sub { color: #999; font-size: 11px; }
-    .pub-date { color: #155724; font-size: 12px; font-weight: 500; }
-    .no-pub { color: #ccc; font-size: 11px; }
+    td:first-child {
+      border-left: 1px solid #2a2a2a;
+      border-radius: 10px 0 0 10px;
+    }
+    td:last-child {
+      border-right: 1px solid #2a2a2a;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .date-main { font-weight: 500; color: #e5e5e5; }
+    .date-sub { color: #555; font-size: 11px; }
+    .pub-date { color: #22c55e; font-size: 12px; font-weight: 500; }
+    .no-pub { color: #333; font-size: 11px; }
+
+    /* Status select */
     .status-select {
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 500;
-      border: 1px solid #ddd;
+      border: 1px solid #333;
       cursor: pointer;
       outline: none;
+      background: #1a1a1a;
+      color: #e5e5e5;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      padding-right: 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
     }
-    .status-select:hover { border-color: #aaa; }
-    .status-select.is-draft { background: #fff3cd; color: #856404; border-color: #ffc107; }
-    .status-select.is-published { background: #c3e6cb; color: #155724; border-color: #28a745; }
+    .status-select:hover { border-color: #555; }
+    .status-select:focus { border-color: #7c3aed; box-shadow: 0 0 0 2px rgba(124,58,237,0.15); }
+    .status-select option { background: #1a1a1a; color: #e5e5e5; }
+
+    .status-select.is-draft {
+      background-color: rgba(245,158,11,0.1);
+      color: #f59e0b;
+      border-color: rgba(245,158,11,0.3);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f59e0b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    }
+    .status-select.is-published {
+      background-color: rgba(34,197,94,0.1);
+      color: #22c55e;
+      border-color: rgba(34,197,94,0.3);
+      box-shadow: 0 0 8px rgba(34,197,94,0.1);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2322c55e' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+    }
+
+    /* Buttons base */
     .btn {
       border: none;
       padding: 6px 14px;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
       font-weight: 500;
-      transition: background 0.15s;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .btn-copy { background: #e8eaed; color: #333; }
-    .btn-copy:hover { background: #d0d3d8; }
-    .btn-copied { background: #d4edda; color: #155724; }
-    .btn-preview { background: #e3f2fd; color: #1565c0; margin-right: 6px; }
-    .btn-preview:hover { background: #bbdefb; }
-    .btn-publish { background: #4CAF50; color: #fff; margin-right: 4px; font-size: 11px; padding: 4px 8px; }
-    .btn-publish:hover { background: #43a047; }
-    .btn-published { background: #c3e6cb; color: #155724; margin-right: 4px; font-size: 11px; padding: 4px 8px; }
-    .platform-row { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
-    .plat-btn { font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; background: #f8f9fa; cursor: pointer; }
-    .plat-btn:hover { background: #e8eaed; }
-    .plat-btn.sent { background: #c3e6cb; color: #155724; border-color: #28a745; cursor: default; }
-    .empty { text-align: center; padding: 48px; color: #999; }
-    .refresh-note { text-align: right; font-size: 11px; color: #aaa; margin-top: 12px; }
+
+    /* Preview button */
+    .btn-preview {
+      background: transparent;
+      color: #888;
+      border: 1px solid #333;
+      margin-right: 6px;
+    }
+    .btn-preview:hover {
+      border-color: #7c3aed;
+      color: #a78bfa;
+      box-shadow: 0 0 10px rgba(124,58,237,0.15);
+    }
+
+    /* Copy button — glass effect */
+    .btn-copy {
+      background: rgba(255,255,255,0.05);
+      color: #888;
+      border: 1px solid #333;
+      backdrop-filter: blur(8px);
+    }
+    .btn-copy:hover {
+      background: rgba(255,255,255,0.1);
+      color: #e5e5e5;
+      border-color: #555;
+    }
+    .btn-copied {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    /* Publish button */
+    .btn-publish {
+      background: linear-gradient(135deg, #7c3aed, #3b82f6);
+      color: #fff;
+      margin-right: 4px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border: none;
+    }
+    .btn-publish:hover {
+      box-shadow: 0 0 16px rgba(124,58,237,0.3);
+      transform: translateY(-1px);
+    }
+    .btn-published {
+      background: rgba(34,197,94,0.15);
+      color: #22c55e;
+      margin-right: 4px;
+      font-size: 11px;
+      padding: 4px 10px;
+      border: 1px solid rgba(34,197,94,0.2);
+    }
+
+    /* Platform buttons */
+    .platform-row { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; }
+    .plat-btn {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: #888;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    .plat-btn:hover {
+      border-color: #555;
+      color: #e5e5e5;
+      background: #252525;
+    }
+    /* TG button */
+    .plat-btn[onclick*="telegram"] {
+      border-color: rgba(0,136,204,0.3);
+      color: #0088cc;
+    }
+    .plat-btn[onclick*="telegram"]:hover {
+      background: rgba(0,136,204,0.1);
+      border-color: rgba(0,136,204,0.5);
+      box-shadow: 0 0 10px rgba(0,136,204,0.15);
+    }
+    /* FB button */
+    .plat-btn[onclick*="facebook"] {
+      border-color: rgba(24,119,242,0.3);
+      color: #1877f2;
+    }
+    .plat-btn[onclick*="facebook"]:hover {
+      background: rgba(24,119,242,0.1);
+      border-color: rgba(24,119,242,0.5);
+      box-shadow: 0 0 10px rgba(24,119,242,0.15);
+    }
+    .plat-btn.sent {
+      background: rgba(34,197,94,0.1);
+      color: #22c55e;
+      border-color: rgba(34,197,94,0.3);
+      cursor: default;
+      box-shadow: 0 0 6px rgba(34,197,94,0.08);
+    }
+
+    /* Delete button */
+    .btn-delete {
+      background: transparent;
+      color: #666;
+      border: 1px solid transparent;
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-delete:hover {
+      color: #ef4444;
+      border-color: rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.08);
+    }
+
+    .empty { text-align: center; padding: 48px; color: #444; font-size: 14px; }
+    .refresh-note {
+      text-align: right;
+      font-size: 11px;
+      color: #333;
+      margin-top: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Row number */
+    .row-num {
+      color: #444;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Articles count */
+    .articles-count {
+      color: #888;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Modal */
     .modal-overlay {
       display: none;
       position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 100;
       justify-content: center; align-items: center;
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      max-width: 700px; width: 90%;
-      max-height: 80vh;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+      max-width: 720px; width: 92%;
+      max-height: 75vh;
       display: flex; flex-direction: column;
     }
     .modal-header {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 16px 20px;
-      border-bottom: 1px solid #eee;
+      padding: 18px 22px;
+      border-bottom: 1px solid #2a2a2a;
     }
-    .modal-header h2 { font-size: 16px; font-weight: 600; }
+    .modal-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e5e5e5;
+      letter-spacing: -0.2px;
+    }
     .modal-close {
-      background: none; border: none; font-size: 22px;
-      cursor: pointer; color: #999; padding: 0 4px;
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; color: #555; padding: 2px 6px;
+      border-radius: 6px;
+      transition: all 0.2s;
+      line-height: 1;
     }
-    .modal-close:hover { color: #333; }
+    .modal-close:hover { color: #e5e5e5; background: #2a2a2a; }
     .modal-body {
-      padding: 20px;
+      padding: 22px;
       overflow-y: auto;
       white-space: pre-wrap;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #333;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #ccc;
     }
+    .modal-body::-webkit-scrollbar { width: 6px; }
+    .modal-body::-webkit-scrollbar-track { background: transparent; }
+    .modal-body::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    .modal-body::-webkit-scrollbar-thumb:hover { background: #444; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { padding: 14px; }
+      h1 { font-size: 22px; }
+      .container { max-width: 100%; }
+      table { border-spacing: 0 4px; }
+      td { padding: 10px 10px; font-size: 12px; }
+      thead th { padding: 6px 10px; font-size: 9px; }
+      .platform-row { gap: 3px; }
+      .plat-btn { padding: 3px 6px; font-size: 10px; }
+      .btn { padding: 5px 10px; font-size: 12px; }
+      .btn-preview { margin-right: 3px; }
+      .modal { width: 96%; max-height: 80vh; border-radius: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      .header { flex-direction: column; gap: 6px; }
+      thead { display: none; }
+      tbody tr { display: block; margin-bottom: 8px; border-radius: 10px; }
+      td { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; }
+      td:first-child { border-radius: 10px 10px 0 0; }
+      td:last-child { border-radius: 0 0 10px 10px; }
+      td::before {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #555;
+        letter-spacing: 0.5px;
+      }
+    }
+
+    /* Scrollbar for body */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>News Digest Dashboard <span style="font-size:13px;color:#999;font-weight:400">v2.0.4 | 13.04.2026</span></h1>
+    <div class="header">
+      <h1>News Digest Dashboard</h1>
+      <span class="version-badge">v2.0.4 &middot; 13.04.2026</span>
+    </div>
     <p class="subtitle" id="subtitle">Загрузка...</p>
-    <div style="background:#f0f7ff;border:1px solid #d0e3f7;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#4a6a8a;line-height:1.5;">
+    <div class="course-banner">
       Проект реализован в рамках учебного курса: <strong>Создание ИИ Агентов и приложений для бизнеса, роста, дохода и кайфа.</strong>
       Хотите научиться делать такое же? Попробуйте этот курс. 14 дней пробный период:
-      <a href="https://alexeykrol.com/ai_full/" target="_blank" rel="noopener" style="color:#1a73e8;text-decoration:none;font-weight:500;">alexeykrol.com/ai_full/</a>
+      <a href="https://alexeykrol.com/ai_full/" target="_blank" rel="noopener">alexeykrol.com/ai_full/</a>
     </div>
     <table>
       <thead>
@@ -205,7 +497,7 @@
         // Action buttons — per-platform
         let actionBtn = '';
         if (!hasContent) {
-          actionBtn = '<span style="color:#ccc;font-size:12px">нет контента</span>';
+          actionBtn = '<span style="color:#444;font-size:12px">нет контента</span>';
         } else {
           const tgSent = !!d.telegram_message_id;
           const fbSent = !!d.facebook_post_id;
@@ -217,7 +509,7 @@
             ? `<button class="plat-btn sent" disabled>✓ FB</button>`
             : `<button class="plat-btn" onclick="publishPlatform('${d.id}','facebook',this)">📘 FB</button>`;
 
-          const delBtn = `<button class="btn" style="background:#f8d7da;color:#721c24;font-size:11px;padding:3px 6px;" onclick="deleteDigest('${d.id}')">✕</button>`;
+          const delBtn = `<button class="btn-delete" onclick="deleteDigest('${d.id}')">✕</button>`;
           actionBtn = `<div class="platform-row"><button class="btn btn-preview" onclick="previewDigest('${d.id}')">&#128065;</button>${tgBtn}${fbBtn}<button class="btn btn-copy" onclick="copyDigest('${d.id}', this)">&#128203;</button>${delBtn}</div>`;
         }
 
@@ -228,10 +520,10 @@
         </select>`;
 
         return `<tr>
-          <td>${d.seq_number || (i + 1)}</td>
+          <td><span class="row-num">${d.seq_number || (i + 1)}</span></td>
           <td>${createdHtml}</td>
           <td>${pubHtml}</td>
-          <td>${d.articles_count || 0}</td>
+          <td><span class="articles-count">${d.articles_count || 0}</span></td>
           <td>${statusSelect}</td>
           <td>${actionBtn}</td>
         </tr>`;
@@ -327,18 +619,7 @@
       try {
         const res = await fetch(`/api/digests/${id}/text`);
         const text = await res.text();
-        // Show first ~3 items (up to 3rd URL)
-        const lines = text.split('\n');
-        let urlCount = 0;
-        let cutoff = lines.length;
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].match(/^https?:\/\//)) {
-            urlCount++;
-            if (urlCount >= 3) { cutoff = i + 1; break; }
-          }
-        }
-        const preview = lines.slice(0, cutoff).join('\n');
-        body.textContent = preview + (cutoff < lines.length ? '\n\n... ещё ' + (text.split(/^https?:\/\//m).length - 1 - urlCount) + ' новостей' : '');
+        body.textContent = text;
       } catch (err) {
         body.textContent = 'Ошибка загрузки: ' + err.message;
       }
