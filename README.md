@@ -15,19 +15,33 @@
 >
 > Хотите научиться делать такое же, а не смотреть как баран на новые ворота? Попробуйте этот курс. 14 дней пробный период: **https://alexeykrol.com/ai_full/**
 
+---
+
+## Как это работает
+
+1. У вас установлено приложение **[Perplexity](https://perplexity.ai)** на телефоне — в нём есть удобный дайджест новостей (Discover)
+2. Вы открываете Perplexity, переходите в Discover и прокручиваете новости
+3. Понравилась новость — нажимаете **«Поделиться»** → **Telegram** → выбираете вашего бота
+4. Когда накопилось **13+ статей** — Claude API автоматически генерирует дайджест, и на дашборде появляется готовый текст с кнопками публикации
+5. Заходите в **Dashboard**, находите нужный дайджест и нажимаете куда хотите опубликовать: **📨 TG** (Telegram), **📘 FB** (Facebook) или оба
+
+Без ручного копирования, без вёрстки, без рутины.
+
 **Примеры готовых дайджестов:**
 [Facebook](https://www.facebook.com/alex.v.krol/posts/pfbid02oj14ZFeSvyrrpcNN8dBJoJ6YsegA4gSeqtsSdhVMjkAYZU15aFuRH7msPN3EuE8al) ・ [Telegram](https://t.me/alexkrol/8510) ・ [YouTube](http://youtube.com/post/UgkxFs7bfPTzCMBtYq_UT2ttLd6TVNRenVRL?si=olNJLuQs_ZVqlarq)
 
 ---
 
-## Что это делает
+## Что нужно до запуска
 
-1. Вы скидываете ссылки на новости в **Telegram-бота** (или через iOS Shortcut)
-2. Когда накопилось **13+ статей** — Claude API автоматически генерирует дайджест
-3. На **дашборде** появляется готовый дайджест с кнопками публикации
-4. Одним кликом публикуется в **Telegram** и **Facebook**
-
-Без ручного копирования, без вёрстки, без рутины.
+| Шаг | Что сделать | Инструкция |
+|-----|------------|-----------|
+| 1 | Настроить **VPS-сервер** (Ubuntu, Docker, Traefik) | [vps-setup.md](news-digest-pipeline/docs/vps-setup.md) |
+| 2 | Создать **Telegram-бота** через @BotFather и настроить webhook | [telegram-setup.md](news-digest-pipeline/docs/telegram-setup.md) |
+| 3 | Получить **Claude API ключ** на [console.anthropic.com](https://console.anthropic.com/) | — |
+| 4 | *(опционально)* Создать **Facebook App** и получить Page Access Token | [facebook-page-setup.md](news-digest-pipeline/docs/facebook-page-setup.md) |
+| 5 | *(опционально)* Настроить **Facebook Profile** автопубликацию (Patchright) | [facebook-setup.md](news-digest-pipeline/docs/facebook-setup.md) |
+| 6 | Заполнить `.env` файл и запустить `docker compose up -d` | [Быстрый старт](#быстрый-старт) |
 
 ---
 
