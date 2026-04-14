@@ -17,6 +17,18 @@
 
 ---
 
+<p align="center">
+  <img src="docs/screenshots/dash.png" width="100%" alt="Dashboard" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/telegram.png" width="32%" alt="Telegram канал" />
+  <img src="docs/screenshots/download.png" width="32%" alt="Telegram бот" />
+  <img src="docs/screenshots/facebook.png" width="32%" alt="Facebook пост" />
+</p>
+
+---
+
 ## Как это работает
 
 1. У вас установлено приложение **[Perplexity](https://perplexity.ai)** на телефоне — в нём есть удобный дайджест новостей (Discover)
