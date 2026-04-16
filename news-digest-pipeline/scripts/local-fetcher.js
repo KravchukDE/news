@@ -20,8 +20,23 @@
 
 import { execSync } from 'child_process';
 import { load as cheerioLoad } from 'cheerio';
+import { config as loadDotenv } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-const SERVER = 'https://YOUR_DOMAIN';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+loadDotenv({ path: join(__dirname, '..', '.env') });
+
+const SERVER = process.env.BASE_URL;
+const API_KEY = process.env.API_SECRET_KEY;
+
+if (!SERVER || !API_KEY) {
+  console.error('Missing BASE_URL or API_SECRET_KEY in .env');
+  process.exit(1);
+}
+
+const AUTH_HEADERS = { Authorization: `Bearer ${API_KEY}` };
+
 const LOAD_WAIT_MS = 8000;       // Wait for page to load
 const BETWEEN_TABS_MS = 2000;    // Pause between processing tabs
 
@@ -85,8 +100,8 @@ function runAppleScriptMulti(script) {
 async function fetchArticlesWithoutContent() {
   // Fetch both 'new' and 'error' articles — both may lack content
   const [resNew, resError] = await Promise.all([
-    fetch(`${SERVER}/api/articles?status=new&limit=50`),
-    fetch(`${SERVER}/api/articles?status=error&limit=50`),
+    fetch(`${SERVER}/api/articles?status=new&limit=50`, { headers: AUTH_HEADERS }),
+    fetch(`${SERVER}/api/articles?status=error&limit=50`, { headers: AUTH_HEADERS }),
   ]);
   if (!resNew.ok) throw new Error(`Server returned ${resNew.status}`);
   if (!resError.ok) throw new Error(`Server returned ${resError.status}`);
@@ -102,7 +117,7 @@ async function fetchArticlesWithoutContent() {
 async function sendContentToServer(articleId, title, content) {
   const res = await fetch(`${SERVER}/api/articles/${articleId}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...AUTH_HEADERS },
     body: JSON.stringify({ title, content }),
   });
   if (!res.ok) {
